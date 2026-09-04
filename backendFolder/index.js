@@ -8,7 +8,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+const dns = require("dns");
+dns.setServers([
+    '1.1.1.1',
+    '8.8.8.8'
+])
 connectDB();
 
 app.get("/", (req, res) => {
