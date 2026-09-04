@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("token"));
-  }, [location]);
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
     navigate("/login");
   };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
       <div className="container-fluid px-4">
-        <Link className="navbar-brand  fs-4 fw-bold text-info" to="/">
+        <Link className="navbar-brand fs-4 fw-bold text-info" to="/">
           iNotebook
         </Link>
 
@@ -40,7 +35,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/" ? "active  text-info" : ""
+                  location.pathname === "/" ? "active text-info" : ""
                 }`}
                 to="/"
               >
@@ -51,7 +46,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/about" ? "active  text-info" : ""
+                  location.pathname === "/about" ? "active text-info" : ""
                 }`}
                 to="/about"
               >
@@ -62,7 +57,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/contact" ? "active  text-info" : ""
+                  location.pathname === "/contact" ? "active text-info" : ""
                 }`}
                 to="/contact"
               >
@@ -70,10 +65,13 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
+
           {isLoggedIn ? (
             <>
               <Link
-                className={`nav-link px-4 fw-semibold text-light${location.pathname === "/profile" ? "active text-info" : ""}`}
+                className={`nav-link px-4 fw-semibold text-light ${
+                  location.pathname === "/profile" ? "active text-info" : ""
+                }`}
                 to="/profile"
               >
                 Profile

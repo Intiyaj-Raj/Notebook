@@ -1,28 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const host = "http://localhost:5000";
 
-  const getUser = async () => {
-    const response = await fetch(`${host}/api/auth/getuser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
-      },
-    });
-
-    const json = await response.json();
-
-    if (response.ok) {
-      setUser(json);
-    } else {
-      console.log(json);
-    }
-  };
-
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await fetch(`${host}/api/auth/getuser`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+
+        const json = await response.json();
+
+        if (response.ok) {
+          setUser(json);
+        } else {
+          console.log(json);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
     getUser();
   }, []);
 
@@ -35,7 +39,11 @@ const Profile = () => {
               <div className="text-center mb-4">
                 <div
                   className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
-                  style={{ width: "90px", height: "90px", fontSize: "35px" }}
+                  style={{
+                    width: "90px",
+                    height: "90px",
+                    fontSize: "35px",
+                  }}
                 >
                   👤
                 </div>
@@ -85,6 +93,7 @@ const Profile = () => {
                   <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Loading...</span>
                   </div>
+
                   <p className="text-muted mt-2">Loading profile...</p>
                 </div>
               )}

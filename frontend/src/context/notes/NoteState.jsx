@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
@@ -17,7 +17,6 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-
     setNotes(json);
   };
 
@@ -38,13 +37,12 @@ const NoteState = (props) => {
 
     const json = await response.json();
 
-    // Add returned note to state
     setNotes((prevNotes) => prevNotes.concat(json));
   };
 
   // Delete a note
   const deleteNote = async (id) => {
-    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+    await fetch(`${host}/api/notes/deletenote/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -52,14 +50,12 @@ const NoteState = (props) => {
       },
     });
 
-    // const json = await response.json();
-
     setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
   };
 
   // Edit a note
   const editNote = async (id, title, description, tag) => {
-    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+    await fetch(`${host}/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,8 +67,6 @@ const NoteState = (props) => {
         tag,
       }),
     });
-
-    // const json = await response.json();
 
     setNotes((prevNotes) =>
       prevNotes.map((note) =>
