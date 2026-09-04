@@ -1,13 +1,21 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  let location = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // console.log(location.pathname);
-  // }, [location]);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
       <div className="container-fluid px-4">
@@ -62,22 +70,30 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
+          {isLoggedIn ? (
+            <>
+              <Link
+                className={`nav-link px-4 fw-semibold text-light${location.pathname === "/profile" ? "active text-info" : ""}`}
+                to="/profile"
+              >
+                Profile
+              </Link>
 
-          <form className="d-flex mt-2 mt-lg-0" role="search">
-            <input
-              className="form-control me-2 rounded-pill"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
+              <button className="btn btn-primary" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className="btn btn-primary mx-2" to="/login">
+                Login
+              </Link>
 
-            <button
-              className="btn btn-outline-info rounded-pill px-4"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
+              <Link className="btn btn-primary mx-2" to="/signup">
+                Signup
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
