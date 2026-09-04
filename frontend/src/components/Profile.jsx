@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const host = "http://localhost:5000";
+  const host = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const getUser = async () => {
@@ -28,7 +28,7 @@ const Profile = () => {
     };
 
     getUser();
-  }, []);
+  }, [host]);
 
   return (
     <div className="container py-5">

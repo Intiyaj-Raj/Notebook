@@ -2,8 +2,7 @@ import { useState } from "react";
 import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
-  const host = "http://localhost:5000";
-
+  const host = import.meta.env.VITE_BACKEND_URL;
   const [notes, setNotes] = useState([]);
 
   // Get all notes

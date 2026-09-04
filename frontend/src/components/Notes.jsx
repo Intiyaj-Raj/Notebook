@@ -8,72 +8,96 @@ const Notes = (props) => {
   const context = useContext(noteContext);
   const { notes, getNotes, editNote } = context;
   const navigate = useNavigate();
+
+  const [note, setNote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
+
+  const ref = useRef(null);
+  const refClose = useRef(null);
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       getNotes();
     } else {
       navigate("/login");
     }
+
     // eslint-disable-next-line
   }, []);
 
-  const ref = useRef(null);
-  const refClose = useRef(null);
-
   const updateNote = (currentNote) => {
-    ref.current.click();
     setNote({
       id: currentNote._id,
       etitle: currentNote.title,
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
+
+    ref.current.click();
   };
 
-  const [note, setNote] = useState({
-    etitle: "",
-    edescription: "",
-    etag: "",
-  });
   const handleClick = () => {
     editNote(note.id, note.etitle, note.edescription, note.etag);
+
     refClose.current.click();
+
     props.showAlert("Updated Successfully", "success");
   };
+
   const onChange = (e) => {
-    setNote({ ...note, [e.target.name]: e.target.value });
+    setNote({
+      ...note,
+      [e.target.name]: e.target.value,
+    });
   };
+
+  const isUpdateDisabled =
+    note.etitle.length < 5 ||
+    note.edescription.length < 5 ||
+    note.etag.length < 5;
 
   return (
     <>
+      {/* Add Note */}
       <AddNote showAlert={props.showAlert} />
 
       {/* Hidden button to open modal */}
       <button
         type="button"
-        className="btn btn-primary d-none"
+        className="d-none"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#editNoteModal"
         ref={ref}
       >
-        Launch demo modal
+        Open Edit Modal
       </button>
 
-      {/* Edit Note Modal */}
+      {/* ================= EDIT MODAL ================= */}
       <div
         className="modal fade"
-        id="exampleModal"
+        id="editNoteModal"
         tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="editNoteModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            {/* Header */}
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Edit Note
-              </h5>
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            {/* Modal Header */}
+            <div className="modal-header border-0 px-4 pt-4">
+              <div>
+                <h4 className="modal-title fw-bold" id="editNoteModalLabel">
+                  <i className="bi bi-pencil-square text-primary me-2"></i>
+                  Edit Note
+                </h4>
+
+                <p className="text-muted mb-0 mt-1">
+                  Update your note details below.
+                </p>
+              </div>
 
               <button
                 type="button"
@@ -83,87 +107,99 @@ const Notes = (props) => {
               ></button>
             </div>
 
-            {/* Body */}
-            <div className="modal-body">
-              <form className="my-3">
-                <div className="row justify-content-center">
-                  <div className="col-12 col-lg-6">
-                    <div className="mb-3">
-                      <label htmlFor="title" className="form-label fw-semibold">
-                        Title
-                      </label>
+            {/* Modal Body */}
+            <div className="modal-body px-4 py-4">
+              <form>
+                {/* Title */}
+                <div className="mb-4">
+                  <label htmlFor="etitle" className="form-label fw-semibold">
+                    <i className="bi bi-type text-primary me-2"></i>
+                    Title
+                  </label>
 
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="etitle"
-                        name="etitle"
-                        value={note.etitle}
-                        minLength={5}
-                        required
-                        onChange={onChange}
-                      />
-                    </div>
+                  <input
+                    type="text"
+                    className="form-control form-control-lg rounded-3"
+                    id="etitle"
+                    name="etitle"
+                    placeholder="Enter note title"
+                    value={note.etitle}
+                    minLength={5}
+                    required
+                    onChange={onChange}
+                  />
+                </div>
 
-                    <div className="mb-3">
-                      <label
-                        htmlFor="description"
-                        className="form-label fw-semibold"
-                      >
-                        Description
-                      </label>
+                {/* Description */}
+                <div className="mb-4">
+                  <label
+                    htmlFor="edescription"
+                    className="form-label fw-semibold"
+                  >
+                    <i className="bi bi-card-text text-primary me-2"></i>
+                    Description
+                  </label>
 
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="edescription"
-                        name="edescription"
-                        value={note.edescription}
-                        onChange={onChange}
-                        minLength={5}
-                        required
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="tag" className="form-label fw-semibold">
-                        Tag
-                      </label>
+                  <textarea
+                    className="form-control rounded-3"
+                    id="edescription"
+                    name="edescription"
+                    rows="5"
+                    placeholder="Write your note..."
+                    value={note.edescription}
+                    onChange={onChange}
+                    minLength={5}
+                    required
+                  ></textarea>
 
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="etag"
-                        name="etag"
-                        value={note.etag}
-                        onChange={onChange}
-                        minLength={5}
-                        required
-                      />
-                    </div>
+                  <div className="text-end mt-1">
+                    <small className="text-muted">
+                      {note.edescription.length} characters
+                    </small>
                   </div>
+                </div>
+
+                {/* Tag */}
+                <div className="mb-2">
+                  <label htmlFor="etag" className="form-label fw-semibold">
+                    <i className="bi bi-tags text-primary me-2"></i>
+                    Tag
+                  </label>
+
+                  <input
+                    type="text"
+                    className="form-control form-control-lg rounded-3"
+                    id="etag"
+                    name="etag"
+                    placeholder="e.g. Work, Study, Personal"
+                    value={note.etag}
+                    onChange={onChange}
+                    minLength={5}
+                    required
+                  />
                 </div>
               </form>
             </div>
 
-            {/* Footer */}
-            <div className="modal-footer">
+            {/* Modal Footer */}
+            <div className="modal-footer border-0 px-4 pb-4">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-light border px-4"
                 data-bs-dismiss="modal"
                 ref={refClose}
               >
-                Close
+                <i className="bi bi-x-lg me-2"></i>
+                Cancel
               </button>
 
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary px-4"
                 onClick={handleClick}
-                disabled={
-                  note.etitle.length < 5 || note.edescription.length < 5
-                }
+                disabled={isUpdateDisabled}
               >
+                <i className="bi bi-check-lg me-2"></i>
                 Update Note
               </button>
             </div>
@@ -171,24 +207,64 @@ const Notes = (props) => {
         </div>
       </div>
 
-      {/* Notes */}
-      <div className="container">
-        <div className="row my-3">
-          <h2>Your Notes</h2>
-          <div className="container">
-            {notes.length === 0 && "No notes to display"}
+      {/* ================= NOTES SECTION ================= */}
+      <div className="container py-4">
+        {/* Header */}
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+          <div>
+            <h2 className="fw-bold mb-1">
+              <i className="bi bi-journal-text text-primary me-2"></i>
+              Your Notes
+            </h2>
+
+            <p className="text-muted mb-0">
+              Manage and organize all your notes in one place.
+            </p>
           </div>
-          {notes.map((note) => {
-            return (
+
+          {/* Notes Count */}
+          <div className="mt-3 mt-md-0">
+            <span className="badge bg-primary rounded-pill px-3 py-2 fs-6">
+              {notes.length} {notes.length === 1 ? "Note" : "Notes"}
+            </span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <hr className="mb-4" />
+
+        {/* Empty State */}
+        {notes.length === 0 ? (
+          <div className="text-center py-5">
+            <div
+              className="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+              style={{
+                width: "80px",
+                height: "80px",
+                fontSize: "32px",
+              }}
+            >
+              <i className="bi bi-journal-x text-muted"></i>
+            </div>
+
+            <h4 className="fw-semibold">No Notes Yet</h4>
+
+            <p className="text-muted mb-0">
+              Create your first note using the form above.
+            </p>
+          </div>
+        ) : (
+          <div className="row g-4">
+            {notes.map((note) => (
               <NoteItem
                 key={note._id}
                 updateNote={updateNote}
                 note={note}
                 showAlert={props.showAlert}
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
