@@ -12,12 +12,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <nav
+      className="navbar navbar-expand-lg navbar-dark shadow"
+      style={{ backgroundColor: "#091726" }}
+    >
       <div className="container-fluid px-4">
+        {/* Logo */}
         <Link className="navbar-brand fs-4 fw-bold text-info" to="/">
           iNotebook
         </Link>
 
+        {/* Mobile Toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -30,12 +35,14 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
+        {/* Navbar Content */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          {/* Navigation Items - Right Side */}
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/" ? "active text-info" : ""
+                  location.pathname === "/" ? "active text-info" : "text-light"
                 }`}
                 to="/"
               >
@@ -46,7 +53,9 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/about" ? "active text-info" : ""
+                  location.pathname === "/about"
+                    ? "active text-info"
+                    : "text-light"
                 }`}
                 to="/about"
               >
@@ -57,41 +66,57 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/contact" ? "active text-info" : ""
+                  location.pathname === "/contact"
+                    ? "active text-info"
+                    : "text-light"
                 }`}
                 to="/contact"
               >
                 Contact
               </Link>
             </li>
+
+            {/* Logged In */}
+            {isLoggedIn ? (
+              <>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link px-3 fw-semibold ${
+                      location.pathname === "/profile"
+                        ? "active text-info"
+                        : "text-light"
+                    }`}
+                    to="/profile"
+                  >
+                    Profile
+                  </Link>
+                </li>
+
+                <li className="nav-item ms-lg-2">
+                  <button
+                    className="btn btn-primary px-4"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item ms-lg-2">
+                  <Link className="btn btn-primary px-4" to="/login">
+                    Login
+                  </Link>
+                </li>
+
+                <li className="nav-item ms-lg-2">
+                  <Link className="btn btn-primary px-4" to="/signup">
+                    Signup
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
-
-          {isLoggedIn ? (
-            <>
-              <Link
-                className={`nav-link px-4 fw-semibold text-light ${
-                  location.pathname === "/profile" ? "active text-info" : ""
-                }`}
-                to="/profile"
-              >
-                Profile
-              </Link>
-
-              <button className="btn btn-primary" onClick={handleLogout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link className="btn btn-primary mx-2" to="/login">
-                Login
-              </Link>
-
-              <Link className="btn btn-primary mx-2" to="/signup">
-                Signup
-              </Link>
-            </>
-          )}
         </div>
       </div>
     </nav>
