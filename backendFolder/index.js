@@ -6,13 +6,18 @@ const connectDB = require("./db");
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "https://inotebook-by-intiyaj.vercel.app"
+        ],
+        credentials: true
+    })
+);
+
 app.use(express.json());
-const dns = require("dns");
-dns.setServers([
-    '1.1.1.1',
-    '8.8.8.8'
-])
+
 connectDB();
 
 app.get("/", (req, res) => {
