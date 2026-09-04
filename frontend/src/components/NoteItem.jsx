@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import noteContext from "../context/notes/noteContext";
 
 const NoteItem = (props) => {
@@ -18,6 +18,7 @@ const NoteItem = (props) => {
             className="btn btn-danger mx-2 note-icon"
             onClick={() => {
               deleteNote(note._id);
+              props.showAlert("Deleted Successfully", "success");
             }}
           >
             Delete

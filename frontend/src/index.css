@@ -1,3 +1,39 @@
 .note-icon {
   cursor: pointer;
 }
+
+/* footer component  */
+.footer-title {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.4rem;
+}
+
+.feature-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #42a5f5;
+}
+
+.follow-link {
+  color: #8a99a8;
+  padding: 5px 0;
+  transition: all 0.2s ease;
+}
+
+.follow-link:hover {
+  color: #42a5f5 !important;
+}
+
+@media (max-width: 767px) {
+  .footer-title {
+    margin-top: 10px;
+  }
+}

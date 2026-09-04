@@ -1,17 +1,20 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  let location = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // console.log(location.pathname);
-  // }, [location]);
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
       <div className="container-fluid px-4">
-        <Link className="navbar-brand  fs-4 fw-bold text-info" to="/">
+        <Link className="navbar-brand fs-4 fw-bold text-info" to="/">
           iNotebook
         </Link>
 
@@ -32,7 +35,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/" ? "active  text-info" : ""
+                  location.pathname === "/" ? "active text-info" : ""
                 }`}
                 to="/"
               >
@@ -43,7 +46,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/about" ? "active  text-info" : ""
+                  location.pathname === "/about" ? "active text-info" : ""
                 }`}
                 to="/about"
               >
@@ -54,7 +57,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link
                 className={`nav-link px-3 fw-semibold ${
-                  location.pathname === "/contact" ? "active  text-info" : ""
+                  location.pathname === "/contact" ? "active text-info" : ""
                 }`}
                 to="/contact"
               >
@@ -63,21 +66,32 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <form className="d-flex mt-2 mt-lg-0" role="search">
-            <input
-              className="form-control me-2 rounded-pill"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
+          {isLoggedIn ? (
+            <>
+              <Link
+                className={`nav-link px-4 fw-semibold text-light ${
+                  location.pathname === "/profile" ? "active text-info" : ""
+                }`}
+                to="/profile"
+              >
+                Profile
+              </Link>
 
-            <button
-              className="btn btn-outline-info rounded-pill px-4"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
+              <button className="btn btn-primary" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className="btn btn-primary mx-2" to="/login">
+                Login
+              </Link>
+
+              <Link className="btn btn-primary mx-2" to="/signup">
+                Signup
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
